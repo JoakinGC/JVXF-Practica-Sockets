@@ -50,7 +50,7 @@ public class ClientConfigFXMLController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main/InicioSessionFXML.fxml"));
             Parent root = loader.load();
 
-            InicioSessionFXMLController controller = loader.getController();
+        
           
             Scene scene = new Scene(root);
             stage = new Stage();            
@@ -65,13 +65,14 @@ public class ClientConfigFXMLController implements Initializable {
     @FXML
     private void viewChat(){
          try {
+            
             Stage stage = (Stage) btnViewChat.getScene().getWindow();
             stage.close(); 
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main/Chat/FXMLDocument.fxml"));
             Parent root = loader.load();
 
-            FXMLDocumentController controller = loader.getController();
+         
           
             Scene scene = new Scene(root);
             stage = new Stage();            

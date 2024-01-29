@@ -6,6 +6,7 @@ package Main;
  */
 
 
+import Main.Chat.FXMLDocumentController;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,8 +22,7 @@ public class chat extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        try {   
-                
+        try {                   
                 Parent root = FXMLLoader.load(getClass().getResource("InicioSessionFXML.fxml"));
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
@@ -33,9 +33,7 @@ public class chat extends Application {
 
     }
 
-    /**
-     * @param args the command line arguments
-     */
+   
     public static void main(String[] args) {
         launch(args);
     }

@@ -16,7 +16,9 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class InicioSessionFXMLController implements Initializable {
-
+    
+    int nSesion = 0;
+    
     @FXML
     private Button btnViewServer;
     
@@ -29,13 +31,15 @@ public class InicioSessionFXMLController implements Initializable {
     @FXML
     private void openViewChat() {        
         try {
+            nSesion++;
             Stage stage = (Stage) btnViewChat.getScene().getWindow();
             stage.close(); 
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main/Chat/FXMLDocument.fxml"));
             Parent root = loader.load();
+            
+            FXMLDocumentController dc = new FXMLDocumentController(nSesion);
 
-            FXMLDocumentController controller = loader.getController();
           
             Scene scene = new Scene(root);
             stage = new Stage();            
@@ -54,8 +58,6 @@ public class InicioSessionFXMLController implements Initializable {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main/Client/ClientConfigFXML.fxml"));
             Parent root = loader.load();
-
-            ClientConfigFXMLController controller = loader.getController();
           
             Scene scene = new Scene(root);
             stage = new Stage();            
@@ -75,8 +77,6 @@ public class InicioSessionFXMLController implements Initializable {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main/Server/ConfigServerFXML.fxml"));
             Parent root = loader.load();
-
-            ConfigServerFXMLController controller = loader.getController();
           
             Scene scene = new Scene(root);
             stage = new Stage();            
@@ -86,6 +86,14 @@ public class InicioSessionFXMLController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    public int getNumberSession(){
+        return nSesion;
+    }
+    
+    public void addSession(){
+        nSesion++;
     }
     
     
