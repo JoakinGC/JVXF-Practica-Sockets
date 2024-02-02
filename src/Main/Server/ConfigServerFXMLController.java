@@ -8,6 +8,7 @@ package Main.Server;
 
 import Main.Chat.FXMLDocumentController;
 import Main.InicioSessionFXMLController;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 /**
@@ -30,25 +32,41 @@ public class ConfigServerFXMLController implements Initializable {
      * Initializes the controller class.
      */
     
+        
     @FXML
     private Button btnViewChat;
     
     @FXML
     private Button btnViewMain;
+    @FXML
+    private TextField puerto;
     
     @FXML
-    private void viewChat(){
+    private void viewChat() {
         try {
             Stage stage = (Stage) btnViewChat.getScene().getWindow();
-            stage.close(); 
+            stage.close();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main/Chat/FXMLDocument.fxml"));
+            
             Parent root = loader.load();
-
             FXMLDocumentController controller = loader.getController();
-          
+            
+            try {
+                int num = Integer.parseInt(puerto.getText());
+                controller.configServerDefault(num);
+                controller.configClient("localhost", num);
+        
+            } catch (NumberFormatException e) {
+       
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+           
+            
+            
+
             Scene scene = new Scene(root);
-            stage = new Stage();            
+            stage = new Stage();
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

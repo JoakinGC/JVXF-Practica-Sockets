@@ -2,8 +2,6 @@ package Main;
 
 
 import Main.Chat.FXMLDocumentController;
-import Main.Client.ClientConfigFXMLController;
-import Main.Server.ConfigServerFXMLController;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,7 +15,7 @@ import javafx.stage.Stage;
 
 public class InicioSessionFXMLController implements Initializable {
     
-    int nSesion = 0;
+    
     
     @FXML
     private Button btnViewServer;
@@ -31,16 +29,23 @@ public class InicioSessionFXMLController implements Initializable {
     @FXML
     private void openViewChat() {        
         try {
-            nSesion++;
+            
             Stage stage = (Stage) btnViewChat.getScene().getWindow();
             stage.close(); 
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Main/Chat/FXMLDocument.fxml"));
             Parent root = loader.load();
+            FXMLDocumentController controller = loader.getController();
             
-            FXMLDocumentController dc = new FXMLDocumentController(nSesion);
-
-          
+            try{
+                controller.configServerDefault(4444);
+                controller.configClient("localhost", 4444);
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+                
+            
+            
             Scene scene = new Scene(root);
             stage = new Stage();            
             stage.setScene(scene);
@@ -88,14 +93,7 @@ public class InicioSessionFXMLController implements Initializable {
         }
     }
     
-    public int getNumberSession(){
-        return nSesion;
-    }
-    
-    public void addSession(){
-        nSesion++;
-    }
-    
+   
     
 
     @Override

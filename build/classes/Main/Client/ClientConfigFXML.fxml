@@ -14,8 +14,8 @@
       <Button fx:id="btnBackMain" layoutX="22.0" layoutY="285.0" mnemonicParsing="false" onAction="#backMainView" prefHeight="37.0" prefWidth="79.0" text="Ir al inicio" />
       <Button fx:id="btnViewChat" layoutX="269.0" layoutY="284.0" mnemonicParsing="false" onAction="#viewChat" prefHeight="38.0" prefWidth="79.0" text="Chat" />
       <Label layoutX="128.0" layoutY="14.0" prefHeight="38.0" prefWidth="132.0" text="Configuracion Cliente" textAlignment="CENTER" />
-      <TextField layoutX="166.0" layoutY="55.0" />
-      <TextField layoutX="166.0" layoutY="107.0" />
+      <TextField fx:id="url" layoutX="166.0" layoutY="55.0" />
+      <TextField fx:id="numPuerto" layoutX="166.0" layoutY="107.0" />
       <Label layoutX="34.0" layoutY="54.0" prefHeight="26.0" prefWidth="79.0" text="Direcion IP" />
       <Label layoutX="46.0" layoutY="106.0" prefHeight="26.0" prefWidth="55.0" text="Puerto" />
    </children>

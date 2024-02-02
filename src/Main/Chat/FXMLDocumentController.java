@@ -6,7 +6,6 @@ package Main.Chat;
  */
 
 
-import Main.InicioSessionFXMLController;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -15,6 +14,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -36,12 +36,17 @@ import javafx.stage.Stage;
  *
  * @author USUARIO
  */
-public class FXMLDocumentController  implements Initializable{
-     Socket socketCliente = null;
-     BufferedReader entradaSocket = null;
-     PrintWriter salidaSocket = null;
-     ReadSocketMessages rs;
-     int numero = 0;
+public class FXMLDocumentController  {
+    private int puertoSocketController = 5555;
+    
+    
+    Socket socketCliente = null;
+    BufferedReader entradaSocket = null;
+    PrintWriter salidaSocket = null;
+    ReadSocketMessages rs;
+    
+    
+    
     
     @FXML
     private Button btnEnviar;
@@ -50,16 +55,18 @@ public class FXMLDocumentController  implements Initializable{
     @FXML
     private TextArea mensajes;
 
-    public FXMLDocumentController(int numero) {
-        this.rs = null;
-        this.numero = numero;
+    public FXMLDocumentController() {
+        /*this.rs = null;
+        this.numero = 0;*/
+        
     }
     
     public void updateMessages() throws IOException{
         entradaSocket = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));        
-        rs = new ReadSocketMessages(entradaSocket,this);	
+        rs = new ReadSocketMessages(entradaSocket,this);
+        rs.start();	
     
-	rs.start();
+	
     }
     
     @FXML
@@ -67,7 +74,16 @@ public class FXMLDocumentController  implements Initializable{
         updateMessages();
         btnEnviar.setDisable(true);
         
-        String lineaServidor, lineaTeclado;
+        
+        
+        String mensaje = Mensaje.getText();
+        
+        /*if(server.enviarTxt(mensaje)){
+            System.out.println(server.enviarTxt(mensaje));
+            mensajes.appendText(getTime() + "-> "+ mensaje);
+            Mensaje.clear();
+        }*/
+        
         
         if(Mensaje.getText().equals("Adios")){
             salidaSocket.println(Mensaje.getText());
@@ -76,30 +92,57 @@ public class FXMLDocumentController  implements Initializable{
             backMain();
         }else{
             salidaSocket.println(Mensaje.getText());
-        }                        
+        }                       
         Mensaje.clear();
         btnEnviar.setDisable(false);
+       
+        
     }   
    
+    
+    
     public  void agregarRespuesta(String l){        
         mensajes.appendText("\n"+l);
     }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    
+    public void configClient(String url, int puerto) {
         try {
-	      socketCliente = new Socket("localhost", 4444);	      
-	      salidaSocket = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socketCliente.getOutputStream())),true);		      	      	      	      
-              this.agregarRespuesta("Cliente " + numero);
-	    } catch (IOException e){
-                System.err.println("\"No puede establer canales de E/S para la conexi�n\"");
-		mensajes.appendText("No puede establer canales de E/S para la conexi�n");
-	        System.exit(-1);
-	    }
+            
+            socketCliente = new Socket(url, puerto);
+            salidaSocket = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socketCliente.getOutputStream())), true);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }   
+    
+   
+
+
+    
+    public void configServerDefault(int puerto) throws IOException {
+        
+        // Configurar el servidor
+        try (Socket socketServer = new Socket("localhost", 5555);
+            PrintWriter salidaServer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socketServer.getOutputStream())), true)) {
+            salidaServer.println("puerto:" + puerto);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+          
+    
+    private String getTime(){
+        LocalDateTime local = LocalDateTime.now();
+        
+        return "[" +local.getHour() + ":" +local.getMinute()+":"+local.getSecond()+"]";
     }
 
     private void backMain() {
         try {
+            
+            onCloseRequest();
             Stage stage = (Stage) btnEnviar.getScene().getWindow();
             stage.close(); 
 
@@ -110,6 +153,15 @@ public class FXMLDocumentController  implements Initializable{
             stage = new Stage();            
             stage.setScene(scene);
             stage.show();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void onCloseRequest() {
+        try {
+            socketCliente.close();
             
         } catch (IOException e) {
             e.printStackTrace();
